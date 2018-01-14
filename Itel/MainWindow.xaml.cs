@@ -31,7 +31,7 @@ namespace Itel
         ItelUser user2 = new ItelUser("sdk-m");
         ItelUser mainUser;
 
-        public static string ItelVer = "3180";
+        public static string ItelVer = "3230";
 
         double balance = 0;
         double purchasingBalance = 0;
@@ -128,10 +128,8 @@ namespace Itel
             {
                 startProgTB.IsEnabled = true;
                 sosProgTB.IsEnabled = true;
-                alfaSmallProgTB.IsEnabled = true;
                 touchSmallProgTB.IsEnabled = true;
                 touch1MonthProgTB.IsEnabled = true;
-                alfa1MonthProgTB.IsEnabled = true;
                 check.IsEnabled = true;
                 //touch1MonthProgTB.Focus();
             }
@@ -139,13 +137,11 @@ namespace Itel
             if (balance > 50)
             {
                 touch2MonthProgTB.IsEnabled = true;
-                alfa2MonthProgTB.IsEnabled = true;
             }
 
             if (balance > 75)
             {
                 touch3MonthProgTB.IsEnabled = true;
-                alfa3MonthProgTB.IsEnabled = true;
             }
 
             balanceTB.Text = string.Format("Balance = {0:0.000} $", balance);
@@ -608,6 +604,14 @@ namespace Itel
             WindowTransactions win = new WindowTransactions(user1, user2);
             win.Show();
 
+        }
+
+        private void Enable_Click(object sender, RoutedEventArgs e)
+        {
+            alfaSmallProgTB.IsEnabled = true;
+            alfa1MonthProgTB.IsEnabled = true;
+            alfa2MonthProgTB.IsEnabled = true;
+            alfa3MonthProgTB.IsEnabled = true;
         }
     }
 

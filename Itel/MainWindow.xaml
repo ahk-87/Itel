@@ -30,7 +30,14 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="5" Grid.RowSpan="4" BorderBrush="Black" Grid.ColumnSpan="2" Margin="4,0"
-                CornerRadius="2" BorderThickness="1" Background="#33FF0000"/>
+                CornerRadius="2" BorderThickness="1" Background="#33FF0000">
+            <Border.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Enable"
+                              Click="Enable_Click"/>
+                </ContextMenu>
+            </Border.ContextMenu>
+        </Border>
 
         <Button Name="BTNdetail" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Content="B" 
                 IsEnabled="False" Click="Button_Click"/>
