@@ -165,15 +165,11 @@ namespace Itel
     #region Details
     public partial class CardDetail
     {
-        public Datum[] data { get; set; }
-
-        public object extra { get; set; }
-
-        public object code { get; set; }
-
-        public object dialog { get; set; }
-
         public bool status { get; set; }
+        public object code { get; set; }
+        public object dialog { get; set; }
+        public object extra { get; set; }
+        public Data data { get; set; }
 
         public static CardDetail Desirialize(string jsonResponse)
         {
@@ -185,81 +181,106 @@ namespace Itel
         }
     }
 
-    public partial class Datum
+    public class Data
     {
-        public Denomination1[] denominations { get; set; }
+        public string version { get; set; }
+        public IList<Category> categories { get; set; }
+    }
 
-        public long category { get; set; }
+    public class Category
+    {
+        public IList<Item> items { get; set; }
+        public IList<Service> services { get; set; }
+        public IList<Application1> applications { get; set; }
+        public int id { get; set; }
+        public string label1 { get; set; }
+        public string label2 { get; set; }
+        public string foreground1 { get; set; }
+        public string foreground2 { get; set; }
+        public string background { get; set; }
+        public string icon { get; set; }
+    }
 
-        public Brackets[] brackets { get; set; }
+    public class Application1
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string icon { get; set; }
+        public string description { get; set; }
+        public object foreground { get; set; }
+        public object background { get; set; }
+        public int index { get; set; }
+        public IList<Field> fields { get; set; }
+        public int category { get; set; }
+    }
 
-        public double current { get; set; }
+    public class Field
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string type { get; set; }
+        public bool required { get; set; }
+        public int index { get; set; }
+        public string data { get; set; }
+    }
 
+    public class Service
+    {
+        public int id { get; set; }
         public string name { get; set; }
-
-        public long id { get; set; }
-
+        public int type { get; set; }
         public string picture { get; set; }
-
-        public long type { get; set; }
-    }
-
-    public partial class Denomination1
-    {
-        public long id { get; set; }
-
-        public TopupAction topupAction { get; set; }
-
-        public double faceValue { get; set; }
-
-        public object billAction { get; set; }
-
         public string help { get; set; }
-
-        public double price { get; set; }
-
-        public string name { get; set; }
-
-        public string supportNumber { get; set; }
-
-        public string validity { get; set; }
-
-        public long type { get; set; }
-
-        public VoucherAction voucherAction { get; set; }
+        public int category { get; set; }
+        public int categoryType { get; set; }
+        public IList<Denomination1> denominations { get; set; }
+        public object background { get; set; }
+        public object foreground { get; set; }
+        public bool targeted { get; set; }
+        public int index { get; set; }
+        public bool showNote { get; set; }
+        public IList<Bracket> brackets { get; set; }
     }
 
-    public partial class TopupAction
+    public class Bracket
     {
-        public string hint { get; set; }
-
-        public string action { get; set; }
-
-        public string toggleAction { get; set; }
-    }
-
-    public partial class VoucherAction
-    {
-        public long maxQuantity { get; set; }
-
-        public string printAction { get; set; }
-
-        public string action { get; set; }
-
-        public long minQuantity { get; set; }
-
-        public string toggleAction { get; set; }
-
-        public string togglePrintAction { get; set; }
-    }
-
-    public partial class Brackets
-    {
+        public double target { get; set; }
         public string incentive { get; set; }
-
         public double discount { get; set; }
+    }
 
-        public long target { get; set; }
+    public class Denomination1
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string price { get; set; }
+        public string percentage { get; set; }
+        public TopupAction topupAction { get; set; }
+        public VoucherAction voucherAction { get; set; }
+        public object billAction { get; set; }
+    }
+
+    public class VoucherAction
+    {
+        public string toggleAction { get; set; }
+        public string togglePrintAction { get; set; }
+        public string action { get; set; }
+        public string printAction { get; set; }
+        public int minQuantity { get; set; }
+        public int maxQuantity { get; set; }
+    }
+
+    public class TopupAction
+    {
+        public string toggleAction { get; set; }
+        public string action { get; set; }
+        public string hint { get; set; }
+    }
+
+    public class Item
+    {
+        public int type { get; set; }
+        public int id { get; set; }
     }
     #endregion
 }

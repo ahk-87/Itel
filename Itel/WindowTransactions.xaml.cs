@@ -151,12 +151,16 @@ namespace Itel
                                 {
                                     cardDetailFull = CardDetail.Desirialize(File.ReadAllText("details.txt"));
                                 }
-                                foreach (Datum d in cardDetailFull.data)
+                                foreach (Category category in cardDetailFull.data.categories)
                                 {
-                                    foreach (Denomination1 d1 in d.denominations)
+                                    foreach (Service ser in category.services)
                                     {
-                                        if (log.description == d1.name)
-                                            detail.OtherBalance += d1.price;
+                                        foreach (Denomination1 d1 in ser.denominations)
+                                        {
+                                            if (log.description == d1.name)
+
+                                                detail.OtherBalance += double.Parse(d1.price, System.Globalization.NumberStyles.AllowCurrencySymbol | System.Globalization.NumberStyles.AllowDecimalPoint);
+                                        }
                                     }
                                 }
                             }

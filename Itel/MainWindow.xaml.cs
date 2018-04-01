@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -623,7 +624,7 @@ namespace Itel
         const string purchasevouchersUrl = "https://itelapp.com/itel-service/sale/item";
         const string topupVoucherUrl = "https://itelapp.com/itel-service/sale/voucherTopup";
         const string soldVouchersUrl = "https://itelapp.com/itel-service/transaction/soldItems";
-        const string costsUrl = "https://itelapp.com/itel-service/items/services/full";
+        const string costsUrl = "https://itelapp.com/itel-service/items/services/final";
 
         public string Token { get; set; }
 
