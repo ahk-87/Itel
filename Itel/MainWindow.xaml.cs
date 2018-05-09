@@ -614,6 +614,11 @@ namespace Itel
             alfa2MonthProgTB.IsEnabled = true;
             alfa3MonthProgTB.IsEnabled = true;
         }
+
+        private void BTNprofit_Click(object sender, RoutedEventArgs e)
+        {
+            new WindowProfit().Show();
+        }
     }
 
 

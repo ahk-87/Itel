@@ -41,6 +41,10 @@
 
         <Button Name="BTNdetail" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Content="B" 
                 IsEnabled="False" Click="Button_Click"/>
+        
+        <Button Name="BTNprofit" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="P" 
+                 Click="BTNprofit_Click"/>
+
 
         <TextBlock  Name="balanceTB" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Text="Balance = 5254.623$"
                     FontSize="23"  Grid.ColumnSpan="2" Foreground="#FF2B577C" TextWrapping="Wrap" TextAlignment="Center" Background="AliceBlue" Visibility="Hidden"/>
