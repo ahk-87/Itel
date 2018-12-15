@@ -21,8 +21,8 @@ namespace Itel
     /// </summary>
     public partial class WindowProfit : Window
     {
-        int cardTouchProfit = 8900;
-        int cardAlfaProfit = 6900;
+        int cardTouchProfit = 7900;
+        int cardAlfaProfit = 5900;
 
         double profit = 0.0;
 

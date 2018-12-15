@@ -40,6 +40,7 @@ namespace Itel
         double sosPrice = 4.21;
         double startPrice = 10.26;
         double touchSmallPrice = 12.78;
+        double touchMediumPrice = 19.11;
         double oneMonthPrice = 25.4;
         double twoMonthPrice = 50.62;
         double threeMonthPrice = 75.85;
@@ -50,6 +51,7 @@ namespace Itel
 
         List<string> lines;
         bool changed = false;
+        bool windowCanBeClosed = true;
 
         public MainWindow()
         {
@@ -152,6 +154,7 @@ namespace Itel
         async private void goBTN_Click(object sender, RoutedEventArgs e)
         {
             goBTN.IsEnabled = false;
+            windowCanBeClosed = false;
             bool isForMah = check.IsChecked == true;
             tempPath = isForMah ? mahPath : path;
 
@@ -220,6 +223,7 @@ namespace Itel
                 if (!isForMah)
                     updateVouchersTextFile();
 
+                windowCanBeClosed = true;
                 statusTB.Text = "Done";
                 statusTB.Foreground = Brushes.Green;
 
@@ -263,6 +267,10 @@ namespace Itel
                 {
                     case "80011":
                         cardType = "to(12.5)uch";
+                        break;
+
+                    case "80017":
+                        cardType = "to(19.11)uch";
                         break;
 
                     case "80022":
@@ -619,17 +627,26 @@ namespace Itel
         {
             new WindowProfit().Show();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!windowCanBeClosed)
+            {
+                e.Cancel = true;
+                MessageBox.Show("Purchasing of Cards not finished", "wait", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
     }
 
 
     public class ItelUser
     {
-        const string balanceUrl = "https://itelapp.com/itel-service/sale/accountfinancialdetails";
-        const string servicesUrl = "https://itelapp.com/itel-service/items/services";
-        const string purchasevouchersUrl = "https://itelapp.com/itel-service/sale/item";
-        const string topupVoucherUrl = "https://itelapp.com/itel-service/sale/voucherTopup";
-        const string soldVouchersUrl = "https://itelapp.com/itel-service/transaction/soldItems";
-        const string costsUrl = "https://itelapp.com/itel-service/items/services/final";
+        const string balanceUrl = "https://whish.money/itel-service/sale/accountfinancialdetails";
+        const string servicesUrl = "https://whish.money/itel-service/items/services";
+        const string purchasevouchersUrl = "https://whish.money/itel-service/sale/item/purchase";
+        const string topupVoucherUrl = "https://whish.money/itel-service/sale/voucherTopup";
+        const string soldVouchersUrl = "https://whish.money/itel-service/transaction/soldItems";
+        const string costsUrl = "https://whish.money/itel-service/items/services/final";
 
         public string Token { get; set; }
 
@@ -729,6 +746,8 @@ namespace Itel
             client.Headers.Add("sessionId", SessionId);
             client.Headers.Add("deviceId", DeviceId);
             client.Headers.Add("sessionCounter", SessionCounter);
+            client.Headers.Add("locale", "en");
+            //client.Headers.Add("Host", "whish.money");
 
             return client;
         }

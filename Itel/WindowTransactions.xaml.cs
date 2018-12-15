@@ -158,8 +158,13 @@ namespace Itel
                                         foreach (Denomination1 d1 in ser.denominations)
                                         {
                                             if (log.description == d1.name)
-
-                                                detail.OtherBalance += double.Parse(d1.price, System.Globalization.NumberStyles.AllowCurrencySymbol | System.Globalization.NumberStyles.AllowDecimalPoint);
+                                            {
+                                                if (d1.price.StartsWith("USD"))
+                                                    detail.OtherBalance += double.Parse(d1.price.Substring(4));
+                                                else
+                                                    detail.OtherBalance += double.Parse(d1.price, System.Globalization.NumberStyles.AllowCurrencySymbol | System.Globalization.NumberStyles.AllowDecimalPoint);
+                                                break;
+                                            }
                                         }
                                     }
                                 }

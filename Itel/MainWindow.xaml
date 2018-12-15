@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Itel"
-        Loaded="Window_Loaded"
+        Loaded="Window_Loaded" Closing="Window_Closing"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         Title="Itel" Height="700" Width="250">
     <Grid x:Name="mainGrid" Margin="6">
@@ -13,19 +13,19 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="*"/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="1.4*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="44*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="44*"/>
+            <RowDefinition Height="62*"/>
+            <RowDefinition Height="45*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
@@ -41,7 +41,7 @@
 
         <Button Name="BTNdetail" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Content="B" 
                 IsEnabled="False" Click="Button_Click"/>
-        
+
         <Button Name="BTNprofit" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="P" 
                  Click="BTNprofit_Click"/>
 
@@ -120,7 +120,7 @@
             <TextBox Name="sosCardTB" Text="0" VerticalAlignment="Center" Margin="4" FontSize="18" Background="Snow"/>
         </StackPanel>
 
-        
+
         <Button Name="goBTN" Grid.Row="13" Grid.ColumnSpan="2" Content="Extract" Padding="18,8" HorizontalAlignment="Center"
                 VerticalAlignment="Center" FontFamily="Verdana" FontSize="16" Click="goBTN_Click"/>
     </Grid>
