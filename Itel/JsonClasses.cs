@@ -136,7 +136,6 @@ namespace Itel
 
     public class LogDetail
     {
-        public object bytes { get; set; }
         public string date { get; set; }
         public string time { get; set; }
         public string secretNumber { get; set; }
@@ -144,7 +143,7 @@ namespace Itel
         public string secretCode { get; set; }
         public string service { get; set; }
         public string help { get; set; }
-        public int category { get; set; }
+        public int? category { get; set; }
         public string description { get; set; }
         public double amount { get; set; }
         public string picture { get; set; }
@@ -183,7 +182,7 @@ namespace Itel
 
     public class Data
     {
-        public string version { get; set; }
+        public long version { get; set; }
         public IList<Category> categories { get; set; }
     }
 
@@ -203,6 +202,7 @@ namespace Itel
 
     public class Application1
     {
+        public Uri url { get; set; }
         public int id { get; set; }
         public string title { get; set; }
         public string icon { get; set; }
@@ -257,7 +257,7 @@ namespace Itel
         public string percentage { get; set; }
         public TopupAction topupAction { get; set; }
         public VoucherAction voucherAction { get; set; }
-        public object billAction { get; set; }
+        public BillAction billAction { get; set; }
     }
 
     public class VoucherAction
@@ -276,12 +276,18 @@ namespace Itel
         public string action { get; set; }
         public string hint { get; set; }
     }
-
+    public partial class BillAction
+    {
+        public string RetrieveAction { get; set; }
+        public string PayAction { get; set; }
+        public string Hint { get; set; }
+    }
     public class Item
     {
         public int type { get; set; }
         public int id { get; set; }
     }
+    
     #endregion
 }
 

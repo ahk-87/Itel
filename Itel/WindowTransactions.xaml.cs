@@ -145,6 +145,8 @@ namespace Itel
                                 detail.TouchBalance += log.amount;
                             else if (log.service == "ALFA")
                                 detail.AlfaBalance += log.amount;
+                            else if (log.service == "TOUCH VALIDITY TRANSFER")
+                                detail.OtherBalance += log.amount;
                             else
                             {
                                 if (cardDetailFull == null)
