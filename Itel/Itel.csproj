@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,12 +57,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Card.xaml.cs">
+      <DependentUpon>Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Cards.cs" />
     <Compile Include="WindowProfit.xaml.cs">
       <DependentUpon>WindowProfit.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowTransactions.xaml.cs">
       <DependentUpon>WindowTransactions.xaml</DependentUpon>
     </Compile>
+    <Page Include="Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -99,67 +99,29 @@ namespace Itel
 
             return obj;
         }
-    }
-    #region Transaction
-    public class RootTransaction
-    {
-        public bool status { get; set; }
-        public object code { get; set; }
-        public object dialog { get; set; }
-        public object extra { get; set; }
-        public List<Transaction> data { get; set; }
 
-        public static RootTransaction Desirialize(string jsonResponse)
+        public static List<Transaction> DeserializeListTransactions(string json)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootTransaction));
-            MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(jsonResponse));
-            RootTransaction obj = serializer.ReadObject(stream) as RootTransaction;
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<Transaction>));
+            MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(json));
+            List<Transaction> obj = new List<Transaction>();
+            if (stream.Length == 0)
+                return obj;
+            obj = serializer.ReadObject(stream) as List<Transaction>;
 
             return obj;
         }
-    }
 
-    public class Transaction
-    {
-        public string date { get; set; }
-        public List<MyLogInvoiceResponse> myLogInvoiceResponses { get; set; }
-    }
+        public static void SerializeListTransactions(List<Transaction> list, string path)
+        {
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<Transaction>));
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            serializer.WriteObject(stream, list);
+            stream.Flush();
+            stream.Close();
+        }
 
-    public class MyLogInvoiceResponse
-    {
-        public bool batch { get; set; }
-        public int count { get; set; }
-        public int batch_id { get; set; }
-        public string date { get; set; }
-        public List<LogDetail> logDetails { get; set; }
     }
-
-    public class LogDetail
-    {
-        public string date { get; set; }
-        public string time { get; set; }
-        public string secretNumber { get; set; }
-        public string transactionId { get; set; }
-        public string secretCode { get; set; }
-        public string service { get; set; }
-        public string help { get; set; }
-        public int? category { get; set; }
-        public string description { get; set; }
-        public double amount { get; set; }
-        public string picture { get; set; }
-        public string validityPeriod { get; set; }
-        public string expiryDate { get; set; }
-        public string directTopupPhone { get; set; }
-        public int type { get; set; }
-        public int counter { get; set; }
-        public bool voided { get; set; }
-        public string contact { get; set; }
-        public bool fromVoid { get; set; }
-        public double additionalFees { get; set; }
-        public string shortCode { get; set; }
-    }
-
-    #endregion
 
     #region Details
     public partial class CardDetail
@@ -287,7 +249,93 @@ namespace Itel
         public int type { get; set; }
         public int id { get; set; }
     }
-    
+
+    #endregion
+
+
+    #region TransactionsNew
+    public class RootTransaction
+    {
+        public bool status { get; set; }
+        public object code { get; set; }
+        public object dialog { get; set; }
+        public object extra { get; set; }
+        public Transactions data { get; set; }
+
+        public static RootTransaction Desirialize(string jsonResponse)
+        {
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootTransaction));
+            MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(jsonResponse));
+            RootTransaction obj = serializer.ReadObject(stream) as RootTransaction;
+
+            return obj;
+        }
+    }
+
+    public class Transactions
+    {
+        public Summary summary { get; set; }
+        public List<Transaction> details { get; set; }
+    }
+
+    public class Transaction
+    {
+        public string date { get; set; }
+        public List<MyLogInvoiceResponse> myLogInvoiceResponses { get; set; }
+    }
+
+    public class MyLogInvoiceResponse
+    {
+        public bool batch { get; set; }
+        public int count { get; set; }
+        public int batch_id { get; set; }
+        public string date { get; set; }
+        public List<LogDetail> logDetails { get; set; }
+    }
+
+    public class LogDetail
+    {
+        public string transactionId { get; set; }
+        public string service { get; set; }
+        //public string picture { get; set; }
+        //public string pictureUrl { get; set; }
+        public string denomination { get; set; }
+        public string serial { get; set; }
+        //public string secret { get; set; }
+        public string formattedSecret { get; set; }
+        //public object phone { get; set; }
+        public double amount { get; set; }
+        //public object originalAmount { get; set; }
+        //public object fees { get; set; }
+        //public string validity { get; set; }
+        public string expiry { get; set; }
+        //public string help { get; set; }
+        public string time { get; set; }
+        public string date { get; set; }
+        //public bool voided { get; set; }
+        //public bool fromVoid { get; set; }
+        //public int printType { get; set; }
+        //public int viewType { get; set; }
+    }
+
+    public class Summary
+    {
+        public List<SettlementSummaryRespons> settlementSummaryResponses { get; set; }
+        public string totalSales { get; set; }
+    }
+
+    public class SettlementSummaryRespons
+    {
+        public string date { get; set; }
+        public List<Detail> details { get; set; }
+    }
+
+    public class Detail
+    {
+        public string denomination { get; set; }
+        public int number { get; set; }
+        public string picture { get; set; }
+    }
     #endregion
 }
 

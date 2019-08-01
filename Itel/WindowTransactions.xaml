@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Itel"
         mc:Ignorable="d"
-        Title="WindowTransactions" Height="330" Width="300"
+        Title="WindowTransactions" Height="418.619" Width="391.151"
         Loaded="Window_Loaded">
     <Grid>
         <TextBlock Name="TBwait" Text="Waiting ..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60"/>
         <Grid Name="GridMAin" IsEnabled="False" Opacity="0.2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="1.2*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -23,13 +23,15 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                <TextBlock Text="From:" VerticalAlignment="Center" Margin="7"/>
-                <DatePicker VerticalAlignment="Center" Name="FromDatePicker"/>
-                <TextBlock Text="To:" VerticalAlignment="Center" Margin="7"/>
-                <DatePicker VerticalAlignment="Center" Name="ToDatePicker"/>
+                <TextBlock Text="From:" VerticalAlignment="Center" Margin="14,7,7,7"/>
+                <DatePicker VerticalAlignment="Center" Name="FromDatePicker" Margin="0,8,0,8.8" Width="130"/>
+                <TextBlock Text="To:" VerticalAlignment="Center" Margin="26,7,7,7"/>
+                <DatePicker VerticalAlignment="Center" Name="ToDatePicker" Margin="0,8,0,8.8" Width="130"/>
             </StackPanel>
 
             <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -47,6 +49,10 @@
             <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
                    FontSize="30" Text="alfa" Foreground="red" />
             <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
+                   FontSize="30" Text="Google" />
+            <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
+                   FontSize="30" Text="PSN" />
+            <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
                    FontSize="30" Text="other" />
 
             <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -54,6 +60,10 @@
             <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontSize="22" Text="0" Name="TBalfa1"/>
             <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="22" Text="0" Name="TBGoogle1"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="22" Text="0" Name="TBPsn1"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontSize="22" Text="0" Name="TBother1"/>
 
             <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
@@ -61,13 +71,19 @@
             <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontSize="22" Text="0" Name="TBalfa2"/>
             <TextBlock Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontSize="22" Text="0" Name="TBgoogle2"/>
+            <TextBlock Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontSize="22" Text="0" Name="TBpsn2"/>
+            <TextBlock Grid.Row="7" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
                    FontSize="22" Text="0" Name="TBother2"/>
 
-            <TextBlock Name="TBtotlal" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text=""
+            <TextBlock Name="TBtotlal" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text=""
                 Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Foreground="DarkTurquoise"/>
 
-            <Button Name="BTNgetBalance" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="Get Balance!"
-                Margin="5" Click="BTNgetBalance_Click" IsEnabled="False"/>
+            <Button Name="BTNupdateTodayTransactions" Grid.Row="9" Content="Update Today"
+                Margin="6,5,9.6,5" Click="BTNgetBalance_Click"/>
+            <Label x:Name="LBLtodayDate" Grid.ColumnSpan="2" Content="Label" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="9" 
+                   VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>
