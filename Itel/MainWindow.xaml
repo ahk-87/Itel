@@ -110,8 +110,10 @@
         </StackPanel>
 
 
-        <Button Name="goBTN" Grid.Row="11" Grid.ColumnSpan="2" Content="Extract" Padding="18,8" HorizontalAlignment="Center"
-                VerticalAlignment="Center" FontFamily="Verdana" FontSize="16" Click="goBTN_Click"/>
+        <Button Name="goButton" Grid.Row="11" Content="Extract" Padding="18,8" HorizontalAlignment="Center"
+                VerticalAlignment="Center" FontFamily="Verdana" FontSize="16" Click="goBTN_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="cardsButton" Content="Get Card" Grid.Column="1" HorizontalAlignment="Left" Margin="10.6,21,0,0" Grid.Row="11"
+                VerticalAlignment="Top" Width="60" Padding="2" Visibility="Hidden"/>
 
     </Grid>
 </Window>

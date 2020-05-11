@@ -70,22 +70,27 @@ namespace Itel
 
     public class Voucher
     {
-        public string date { get; set; }
-        public int transactionId { get; set; }
+        public string transactionId { get; set; }
         public string service { get; set; }
-        public string denomination { get; set; }
-        public double denominationValue { get; set; }
-        public string validityPeriod { get; set; }
-        public string expiryDate { get; set; }
-        public int itemId { get; set; }
-        public int sessionCounter { get; set; }
-        public string serialNumber { get; set; }
-        public string secretCode { get; set; }
-        public string help { get; set; }
-        public string contact { get; set; }
-        public int type { get; set; }
         public string picture { get; set; }
-        public int category { get; set; }
+        public string pictureUrl { get; set; }
+        public string denomination { get; set; }
+        public string serial { get; set; }
+        public string secret { get; set; }
+        public string formattedSecret { get; set; }
+        public object phone { get; set; }
+        public string amount { get; set; }
+        public object originalAmount { get; set; }
+        public object fees { get; set; }
+        public string validity { get; set; }
+        public string expiry { get; set; }
+        public string help { get; set; }
+        public string time { get; set; }
+        public string date { get; set; }
+        public bool voided { get; set; }
+        public bool fromVoid { get; set; }
+        public int printType { get; set; }
+        public int viewType { get; set; }
     }
     #endregion
 
@@ -304,7 +309,7 @@ namespace Itel
         //public string secret { get; set; }
         public string formattedSecret { get; set; }
         //public object phone { get; set; }
-        public double amount { get; set; }
+        public string amount { get; set; }
         //public object originalAmount { get; set; }
         //public object fees { get; set; }
         //public string validity { get; set; }

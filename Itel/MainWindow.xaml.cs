@@ -28,8 +28,9 @@ namespace Itel
         const string mahPath = @"D:\Dropbox\Text Files\Serials.txt";
         public const string verPath = "version.txt";
 
-        ItelUser user1 = new ItelUser("sdk-a");
-        ItelUser user2 = new ItelUser("sdk-m");
+        ItelUser user1 = new ItelUser("sdk-a", false);
+        //ItelUser user2 = new ItelUser("sdk-m");
+        ItelUser user2 = new ItelUser("sdk-a", true);
         ItelUser mainUser;
 
         public static string ItelVer = "3230";
@@ -158,7 +159,7 @@ namespace Itel
 
         async private void goBTN_Click(object sender, RoutedEventArgs e)
         {
-            goBTN.IsEnabled = false;
+            goButton.IsEnabled = false;
             windowCanBeClosed = false;
             bool isForMah = check.IsChecked == true;
             tempPath = isForMah ? mahPath : path;
@@ -184,7 +185,7 @@ namespace Itel
                         await purchase(touch1MonthProgTB);
                         statusTB.Text = "Purchasing touch 50";
                         await purchase(touch2MonthProgTB);
-                        statusTB.Text = "Purchasing touch threeMonthPrice";
+                        statusTB.Text = "Purchasing touch 75";
                         await purchase(touch3MonthProgTB);
                         statusTB.Text = "Purchasing touch 12.5";
                         await purchase(touchSmallProgTB);
@@ -332,7 +333,7 @@ namespace Itel
                     setNoCards(tb, "Cancelled");
                     return;
                 }
-                
+
                 await Task.Delay(1000);
 
                 List<Voucher> vouchers = await mainUser.PurchaseVouchers(domId, countString);
@@ -375,8 +376,8 @@ namespace Itel
 
                 foreach (Voucher v in vouchers)
                 {
-                    string formatted = string.Format("{0}. {1}", tempCount, ReformatVoucher(v.secretCode, (cardType.StartsWith("al"))));
-                    lines.Insert(lineNumber, formatted);
+                    string formatted = string.Format("{0}. {1}", tempCount, ReformatVoucher(v.secret, (cardType.StartsWith("al"))));
+                    lines.Insert(lineNumber, formatted + (domId == "81010" ? " , (alfa z8ir)" : ""));
                     tempCount--;
                 }
 
@@ -657,11 +658,11 @@ namespace Itel
                         List<string> tempList;
                         if (log.service == "TOUCH")
                         {
-                            if (log.amount == 12.78)
+                            if (log.amount == "12.78")
                                 tempList = touchSmall;
-                            else if (log.amount == 25.4)
+                            else if (log.amount == "25.4")
                                 tempList = touchBig;
-                            else if (log.amount == 10.26)
+                            else if (log.amount == "10.26")
                                 tempList = touchStart;
                             else
                                 continue;
@@ -690,215 +691,236 @@ namespace Itel
             string path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             File.WriteAllLines(path + "\\old cards.txt", touchBig);
         }
-    }
 
-
-    public class ItelUser
-    {
-        const string balanceUrl = "https://whish.money/itel-service/sale/accountfinancialdetails";
-        const string servicesUrl = "https://whish.money/itel-service/items/services";
-        const string purchasevouchersUrl = "https://whish.money/itel-service/sale/item/purchase";
-        const string topupVoucherUrl = "https://whish.money/itel-service/sale/voucherTopup";
-        const string soldVouchersUrlold = "https://whish.money/itel-service/transaction/soldItems";
-        const string soldVouchersUrl = "https://whish.money/itel-service/transaction/purchases";
-        const string costsUrl = "https://whish.money/itel-service/items/services/final";
-
-        public string Token { get; set; }
-
-        public string DeviceId { get; set; }
-
-        public string SessionId { get; set; }
-
-        public string TokenPath { get; set; }
-
-        public string SessionCounter { get; set; }
-
-        public List<Transaction> Transactions;
-
-        public ItelUser(string path)
+        public class ItelUser
         {
-            TokenPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + path;
-            SessionCounter = "1";
-            Transactions = new List<Transaction>();
-        }
+            const string balanceUrl = "https://whish.money/itel-service/sale/accountfinancialdetails";
+            const string lostTransactionsUrl = "https://whish.money/itel-service/transaction/lost/new";
+            const string purchasevouchersUrl = "https://whish.money/itel-service/sale/voucher";
+            const string topupVoucherUrl = "https://whish.money/itel-service/sale/voucherTopup";
+            const string soldVouchersUrlold = "https://whish.money/itel-service/transaction/soldItems";
+            const string soldVouchersUrl = "https://whish.money/itel-service/transaction/purchases";
+            const string costsUrl = "https://whish.money/itel-service/items/services/final";
 
-        async public Task GetSessioncounter()
-        {
-            if (SessionCounter != "1")
-                return;
+            string sessionCounterPath;
 
-            if (File.Exists(TokenPath))
+            public string Token { get; set; }
+
+            public string DeviceId { get; set; }
+
+            public string SessionId { get; set; }
+
+            public string TokenPath { get; set; }
+            public string TransactionsPath { get; set; }
+
+            public string SessionCounter { get; set; }
+
+            public bool UniversalAccount = false;
+
+            public List<Transaction> Transactions;
+
+            public ItelUser(string path, bool universal)
             {
-                string[] data = File.ReadAllLines(TokenPath);
-                DeviceId = data[0];
-                Token = data[1];
-                SessionId = data[2];
+                SessionCounter = "1";
+                TokenPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + path;
+                Transactions = new List<Transaction>();
+                UniversalAccount = universal;
+            }
 
-                if (File.Exists(SessionId))
+            async public Task GetSessioncounter()
+            {
+
+                if (File.Exists(TokenPath))
                 {
-                    Transactions = Json.DeserializeListTransactions(File.ReadAllText(SessionId));
-                    Transactions.Sort(new TransactionComparer());
+                    string[] data = File.ReadAllLines(TokenPath);
+                    DeviceId = data[0];
+                    Token = data[1];
+                    SessionId = data[2];
+
+                    TransactionsPath = UniversalAccount ? "universal" : SessionId;
+
+                    if (File.Exists(TransactionsPath))
+                    {
+                        Transactions = Json.DeserializeListTransactions(File.ReadAllText(TransactionsPath));
+                        Transactions.Sort(new TransactionComparer());
+                    }
+                    else
+                    {
+                        File.Create(TransactionsPath).Dispose();
+                    }
                 }
                 else
                 {
-                    File.Create(SessionId).Dispose();
+                    SessionCounter = "error";
+                    return;
                 }
-            }
-            else
-            {
-                SessionCounter = "error";
-                return;
-            }
-
-            await Task.Delay(200);
-            WebClient client = createClient();
-
-            string result = await client.DownloadStringTaskAsync(servicesUrl);
-            if (result.Contains("update"))
-            {
-                SessionCounter = "update";
-                File.Delete("details.txt");
-            }
-            else
-            {
-                SessionCounter = client.ResponseHeaders["sessionCounter"];
-                if (!File.Exists("details.txt"))
-                    File.WriteAllText("details.txt", await client.DownloadStringTaskAsync(costsUrl));
-            }
-        }
-
-        async public Task UpdateSessionCounter()
-        {
-            WebClient client = createClient();
-
-            string result = await client.DownloadStringTaskAsync(servicesUrl);
-            if (result.Contains("update"))
-            {
-                SessionCounter = "update";
-            }
-            else
-            {
-                SessionCounter = client.ResponseHeaders["sessionCounter"];
-            }
-        }
-
-        async public Task<double> GetBalance()
-        {
-            WebClient client = createClient();
-            string result = await client.DownloadStringTaskAsync(balanceUrl);
-
-            RootObject<BalanceData> root = Json.Desirialize<BalanceData>(result);
-            return root.data.balance;
-        }
-
-        async public Task<List<Voucher>> PurchaseVouchers(string dominationID, string count)
-        {
-            string post = string.Format("{{\"denominationId\":{0},\"numberOfItems\":{1}}}", dominationID, count);
-            WebClient client = createClient();
-            client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
-            string result = await client.UploadStringTaskAsync(purchasevouchersUrl, post);
-
-            //string result = File.ReadAllText(@"C:\Users\SK\Documents\Visual Studio 2015\Projects\TestConsole\TestConsole\bin\Debug\Raw.txt");
-
-            SessionCounter = client.ResponseHeaders["sessionCounter"];
-            RootObject<SalesData> root = Json.Desirialize<SalesData>(result);
-            return root.data.Vouchers;
-        }
-
-        async public Task GetTransactions(DateTime transactionDate, bool updateToday = false)
-        {
-            int index = -1;
-            bool today = false, newday = false;
-            if (Transactions.Count == 0)
-            {
-                newday = true;
-            }
-            else
-            {
-                DateTime firstTransactionDate = DateTime.Parse(Transactions[0].date);
-                today = DateTime.Today.ToString("yyyy-MM-dd") == firstTransactionDate.ToString("yyyy-MM-dd")
-                        && DateTime.Today.ToString("yyyy-MM-dd") == transactionDate.ToString("yyyy-MM-dd");
-                newday = transactionDate.Day > firstTransactionDate.Day && transactionDate > firstTransactionDate;
-            }
-
-            if (today)
-            {
-                if (!updateToday) return;
-                if (Transactions.Count != 0)
-                    Transactions.RemoveAt(0);
-            }
-            else if (!newday)
-            {
-                for (int i = 0; i < Transactions.Count; i++)
+                sessionCounterPath = SessionId + ".session";
+                if (File.Exists(sessionCounterPath))
                 {
-                    DateTime d = DateTime.Parse(Transactions[i].date);
-                    if (d.ToString("yyyy-MM-dd") == transactionDate.ToString("yyyy-MM-dd"))
-                        if (d.TimeOfDay.TotalSeconds != 0)
-                        {
-                            index = i;
-                            break;
-                        }
-                        else
-                            return;
+                    SessionCounter = File.ReadAllText(sessionCounterPath);
+                }
+                else
+                {
+                    File.WriteAllText(sessionCounterPath, SessionCounter);
+                }
+                await Task.Delay(200);
+                WebClient client = createClient();
+
+                string result = await client.DownloadStringTaskAsync(lostTransactionsUrl);
+                if (result.Contains("update"))
+                {
+                    SessionCounter = "update";
+                    //File.Delete("details.txt");
+                }
+                else
+                {
+                    SessionCounter = client.ResponseHeaders["sessionCounter"];
+                    if (SessionCounter == null)
+                        SessionCounter = "12000";
+                    File.WriteAllText(sessionCounterPath, SessionCounter);
+                    //if (!File.Exists("details.txt"))
+                    //   File.WriteAllText("details.txt", await client.DownloadStringTaskAsync(costsUrl));
                 }
             }
 
-            await Task.Delay(200);
-
-            string post = string.Format("{{\"day\":{0},\"month\":{1},\"year\":{2}}}", transactionDate.Day, transactionDate.Month, transactionDate.Year);
-
-            WebClient client = createClient();
-            client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
-            string result = await client.UploadStringTaskAsync(soldVouchersUrl, post);
-
-            RootTransaction root = RootTransaction.Desirialize(result);
-
-            Transaction transaction = root.data.details.Count == 0 ?
-                new Transaction() { date = transactionDate.ToString("yyyy-MM-dd"), myLogInvoiceResponses = new List<MyLogInvoiceResponse>() }
-                : root.data.details[0];
-
-            if (newday || (today && updateToday))
+            async public Task UpdateSessionCounter()
             {
-                transaction.date = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
-                Transactions.Insert(0, transaction);
+                WebClient client = createClient();
+
+                string result = await client.DownloadStringTaskAsync(lostTransactionsUrl);
+                if (result.Contains("update"))
+                {
+                    SessionCounter = "update";
+                }
+                else
+                {
+                    SessionCounter = client.ResponseHeaders["sessionCounter"];
+                    File.WriteAllText(sessionCounterPath, SessionCounter);
+                }
             }
-            else if (index != -1)
+
+            async public Task<double> GetBalance()
             {
-                Transactions[index] = transaction;
+                WebClient client = createClient();
+                string result = await client.DownloadStringTaskAsync(balanceUrl);
+
+                RootObject<BalanceData> root = Json.Desirialize<BalanceData>(result);
+                return root.data.balance;
             }
-            else
+
+            async public Task<List<Voucher>> PurchaseVouchers(string dominationID, string count)
             {
-                Transactions.Add(transaction);
-            }
-        }
+                string post = string.Format("{{\"denominationId\":{0},\"numberOfItems\":{1}}}", dominationID, count);
+                WebClient client = createClient();
+                client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
+                string result = await client.UploadStringTaskAsync(purchasevouchersUrl, post);
 
-        public class TransactionComparer : IComparer<Transaction>
-        {
-            public int Compare(Transaction x, Transaction y)
+                //string result = File.ReadAllText(@"C:\Users\SK\Documents\Visual Studio 2015\Projects\TestConsole\TestConsole\bin\Debug\Raw.txt");
+
+                SessionCounter = client.ResponseHeaders["sessionCounter"];
+                File.WriteAllText(sessionCounterPath, SessionCounter);
+                RootObject<SalesData> root = Json.Desirialize<SalesData>(result);
+                return root.data.Vouchers;
+            }
+
+            async public Task GetTransactions(DateTime transactionDate, bool updateToday = false)
             {
-                return y.date.CompareTo(x.date);
+                int index = -1;
+                bool today = false, newday = false;
+                if (Transactions.Count == 0)
+                {
+                    newday = true;
+                }
+                else
+                {
+                    DateTime firstTransactionDate = DateTime.Parse(Transactions[0].date);
+                    today = DateTime.Today.ToString("yyyy-MM-dd") == firstTransactionDate.ToString("yyyy-MM-dd")
+                            && DateTime.Today.ToString("yyyy-MM-dd") == transactionDate.ToString("yyyy-MM-dd");
+                    newday = transactionDate.Day > firstTransactionDate.Day && transactionDate > firstTransactionDate;
+                }
+
+                if (today)
+                {
+                    if (!updateToday) return;
+                    if (Transactions.Count != 0)
+                        Transactions.RemoveAt(0);
+                }
+                else if (!newday)
+                {
+                    for (int i = 0; i < Transactions.Count; i++)
+                    {
+                        DateTime d = DateTime.Parse(Transactions[i].date);
+                        if (d.ToString("yyyy-MM-dd") == transactionDate.ToString("yyyy-MM-dd"))
+                            if (d.TimeOfDay.TotalSeconds != 0)
+                            {
+                                index = i;
+                                break;
+                            }
+                            else
+                                return;
+                    }
+                }
+
+                await Task.Delay(200);
+
+                string post = string.Format("{{\"account\":{0},\"day\":{1},\"month\":{2},\"year\":{3}}}", (UniversalAccount ? "true" : "false"), transactionDate.Day, transactionDate.Month, transactionDate.Year);
+
+                WebClient client = createClient();
+                client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
+                string result = await client.UploadStringTaskAsync(soldVouchersUrl, post);
+
+                RootTransaction root = RootTransaction.Desirialize(result);
+
+                Transaction transaction = root.data.details.Count == 0 ?
+                    new Transaction() { date = transactionDate.ToString("yyyy-MM-dd"), myLogInvoiceResponses = new List<MyLogInvoiceResponse>() }
+                    : root.data.details[0];
+
+                if (newday || (today && updateToday))
+                {
+                    transaction.date = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+                    Transactions.Insert(0, transaction);
+                }
+                else if (index != -1)
+                {
+                    Transactions[index] = transaction;
+                }
+                else
+                {
+                    Transactions.Add(transaction);
+                }
             }
-        }
 
-        public void SaveTransactions()
-        {
-            Transactions.Sort(new TransactionComparer());
-            Json.SerializeListTransactions(Transactions, SessionId);
-        }
+            public class TransactionComparer : IComparer<Transaction>
+            {
+                public int Compare(Transaction x, Transaction y)
+                {
+                    return y.date.CompareTo(x.date);
+                }
+            }
 
-        private WebClient createClient()
-        {
-            WebClient client = new WebClient();
-            client.Headers.Add("language", "en");
-            client.Headers.Add("itelVersion", MainWindow.ItelVer);
-            client.Headers.Add("token", Token);
-            client.Headers.Add("sessionId", SessionId);
-            client.Headers.Add("deviceId", DeviceId);
-            client.Headers.Add("sessionCounter", SessionCounter);
-            client.Headers.Add("locale", "en");
-            //client.Headers.Add("Host", "whish.money");
+            public void SaveTransactions()
+            {
+                Transactions.Sort(new TransactionComparer());
+                Json.SerializeListTransactions(Transactions, TransactionsPath);
+            }
 
-            return client;
+            private WebClient createClient()
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("language", "en");
+                client.Headers.Add("itelVersion", MainWindow.ItelVer);
+                client.Headers.Add("token", Token);
+                client.Headers.Add("sessionId", SessionId);
+                client.Headers.Add("deviceId", DeviceId);
+                client.Headers.Add("sessionCounter", SessionCounter);
+                client.Headers.Add("locale", "en");
+                //client.Headers.Add("Host", "whish.money");
+
+                return client;
+            }
         }
     }
+
+
+
 }

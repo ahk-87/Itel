@@ -21,8 +21,10 @@ namespace Itel
     /// </summary>
     public partial class WindowProfit : Window
     {
-        int cardTouchProfit = 7900;
-        int cardAlfaProfit = 5900;
+        int alfaAyamPrice = 15000, touchAyamPrice = 17000;
+        int cardTouchProfit = 30000 + 18000 - 38100;
+        int cardAlfaProfit = 30000 + 17000 - 38100;
+        string pricesPath = @"D:\Dropbox\Text Files\callingDollarPrice.txt";
 
         double profit = 0.0;
 
@@ -46,6 +48,20 @@ namespace Itel
         public WindowProfit()
         {
             InitializeComponent();
+            if (File.Exists(pricesPath))
+            {
+                string[] lines = File.ReadAllLines(pricesPath);
+                Dictionary<string, string> prices = new Dictionary<string, string>();
+                foreach (string l in lines)
+                {
+                    string[] values = l.Split(new char[] { '=' });
+                    prices.Add(values[0], values[1]);
+                }
+                touchAyamPrice = int.Parse(prices["touchAyam"]);
+                alfaAyamPrice = int.Parse(prices["alfaAyam"]);
+            }
+            cardTouchProfit = 30000 + touchAyamPrice - 38100;
+            cardAlfaProfit = 30000 + alfaAyamPrice - 38100;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

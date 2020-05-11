@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Itel"
         mc:Ignorable="d"
-        Title="WindowTransactions" Height="418.619" Width="391.151"
+        Title="WindowTransactions" Height="500" Width="391.151"
         Loaded="Window_Loaded">
     <Grid>
         <TextBlock Name="TBwait" Text="Waiting ..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60"/>
@@ -22,6 +22,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="*"/>
@@ -53,6 +55,17 @@
             <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
                    FontSize="30" Text="PSN" />
             <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
+                   FontSize="30" Text="Razer" >
+                <TextBlock.Foreground>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#FF0EF000" Offset="1"/>
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+            <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
+                   FontSize="30" Text="FreeFire" Foreground="Firebrick"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"
                    FontSize="30" Text="other" />
 
             <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -64,6 +77,10 @@
             <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontSize="22" Text="0" Name="TBPsn1"/>
             <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="22" Text="0" Name="TBRazer1"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="22" Text="0" Name="TBFreeFire1"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontSize="22" Text="0" Name="TBother1"/>
 
             <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
@@ -75,14 +92,18 @@
             <TextBlock Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
                    FontSize="22" Text="0" Name="TBpsn2"/>
             <TextBlock Grid.Row="7" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontSize="22" Text="0" Name="TBRazer2"/>
+            <TextBlock Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontSize="22" Text="0" Name="TBFreeFire2"/>
+            <TextBlock Grid.Row="9" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
                    FontSize="22" Text="0" Name="TBother2"/>
 
-            <TextBlock Name="TBtotlal" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text=""
+            <TextBlock Name="TBtotlal" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Text=""
                 Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Foreground="DarkTurquoise"/>
 
-            <Button Name="BTNupdateTodayTransactions" Grid.Row="9" Content="Update Today"
+            <Button Name="BTNupdateTodayTransactions" Grid.Row="11" Content="Update Today"
                 Margin="6,5,9.6,5" Click="BTNgetBalance_Click"/>
-            <Label x:Name="LBLtodayDate" Grid.ColumnSpan="2" Content="Label" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="9" 
+            <Label x:Name="LBLtodayDate" Grid.ColumnSpan="2" Content="Label" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="11" 
                    VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>

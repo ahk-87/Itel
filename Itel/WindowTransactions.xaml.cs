@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Itel.MainWindow;
 
 namespace Itel
 {
@@ -31,8 +32,10 @@ namespace Itel
             public double TouchBalance { get; set; }
             public double AlfaBalance { get; set; }
 
-            public double GoogleBalance { get; set;}
+            public double GoogleBalance { get; set; }
             public double PsnBalance { get; set; }
+            public double RazerBalance { get; set; }
+            public double FreeFireBalance { get; set; }
             public double OtherBalance { get; set; }
 
             //public DateTime DateStart { get; set; }
@@ -43,6 +46,7 @@ namespace Itel
                 await User.GetSessioncounter();
                 if (User.Transactions.Count == 0)
                     await User.GetTransactions(DateTime.Now);
+
 
                 //DateEnd = DateTime.Parse(User.Transactions[0].date);
                 //DateStart = DateTime.Parse(User.Transactions.Last().date);
@@ -103,6 +107,8 @@ namespace Itel
 
         async private void SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+            GridMAin.Opacity = 0.5;
+            TBwait.Visibility = Visibility.Visible;
             if (sender == FromDatePicker)
             {
                 if (FromDatePicker.SelectedDate.Value > ToDatePicker.SelectedDate.Value)
@@ -147,6 +153,9 @@ namespace Itel
             await prepareDetails(detail2);
 
             updateTextBox();
+
+            GridMAin.Opacity = 1;
+            TBwait.Visibility = Visibility.Collapsed;
         }
 
 
@@ -157,6 +166,8 @@ namespace Itel
             detail.AlfaBalance = 0;
             detail.GoogleBalance = 0;
             detail.PsnBalance = 0;
+            detail.FreeFireBalance = 0;
+            detail.RazerBalance = 0;
             detail.OtherBalance = 0;
 
             //int i = 0;
@@ -179,19 +190,30 @@ namespace Itel
                     {
                         foreach (LogDetail log in invoice.logDetails)
                         {
+                            double amountInDollar = double.Parse(log.amount);
+                            if (amountInDollar > 1000)
+                                amountInDollar = Math.Round(amountInDollar / 15.15) / 100;
                             if (log.service == "TOUCH")
-                                detail.TouchBalance += log.amount;
+                                detail.TouchBalance += amountInDollar;
                             else if (log.service == "ALFA")
-                                detail.AlfaBalance += log.amount;
+                                detail.AlfaBalance += amountInDollar;
                             else if (log.service == "GOOGLE PLAY")
-                                detail.GoogleBalance += log.amount;
+                                detail.GoogleBalance += amountInDollar;
                             else if (log.service == "PLAY STATION NETWORK")
-                                detail.PsnBalance += log.amount;
+                                detail.PsnBalance += amountInDollar;
+                            else if (log.service == "RAZER")
+                                detail.RazerBalance += amountInDollar;
+                            else if (log.service == "FREE FIRE")
+                                detail.FreeFireBalance += amountInDollar;
+                            else if (log.service == "WHISH COLLECT PAYMENT")
+                            {
+                                //detail.OtherBalance += double.Parse(log.amount.Remove(log.amount.Length-4));
+                            }
                             //else if (log.service == "TOUCH VALIDITY TRANSFER")
                             //    detail.OtherBalance += log.amount;
                             else
                             {
-                                detail.OtherBalance += log.amount;
+                                detail.OtherBalance += amountInDollar;
                                 //if (cardDetailFull == null)
                                 //{
                                 //    cardDetailFull = CardDetail.Desirialize(File.ReadAllText("details.txt"));
@@ -240,7 +262,16 @@ namespace Itel
 
             //    i++;
             //} while (transactions[i].date != fromDateString);
-
+            if (detail.User.UniversalAccount)
+            {
+                detail.TouchBalance -= detail1.TouchBalance;
+                detail.AlfaBalance -= detail1.AlfaBalance;
+                detail.GoogleBalance -= detail1.GoogleBalance;
+                detail.RazerBalance -= detail1.RazerBalance;
+                detail.FreeFireBalance -= detail1.FreeFireBalance;
+                detail.PsnBalance -= detail1.PsnBalance;
+                detail.OtherBalance -= detail1.OtherBalance;
+            }
         }
 
         async private void BTNgetBalance_Click(object sender, RoutedEventArgs e)
@@ -265,16 +296,22 @@ namespace Itel
             TBalfa1.Text = detail1.AlfaBalance.ToString("0.00");
             TBGoogle1.Text = detail1.GoogleBalance.ToString("0.00");
             TBPsn1.Text = detail1.PsnBalance.ToString("0.00");
+            TBRazer1.Text = detail1.RazerBalance.ToString("0.00");
+            TBFreeFire1.Text = detail1.FreeFireBalance.ToString("0.00");
             TBother1.Text = detail1.OtherBalance.ToString("0.000");
 
             TBtouch2.Text = detail2.TouchBalance.ToString("0.00");
             TBalfa2.Text = detail2.AlfaBalance.ToString("0.00");
             TBgoogle2.Text = detail2.GoogleBalance.ToString("0.00");
             TBpsn2.Text = detail2.PsnBalance.ToString("0.00");
+            TBRazer2.Text = detail2.RazerBalance.ToString("0.00");
+            TBFreeFire2.Text = detail2.FreeFireBalance.ToString("0.00");
             TBother2.Text = detail2.OtherBalance.ToString("0.000");
 
             double total = detail1.TouchBalance + detail1.AlfaBalance + detail1.OtherBalance + detail1.GoogleBalance + detail1.PsnBalance
-                + detail2.TouchBalance + detail2.AlfaBalance + detail2.GoogleBalance + detail2.PsnBalance + detail2.OtherBalance;
+                + detail1.FreeFireBalance + detail1.RazerBalance
+                + detail2.TouchBalance + detail2.AlfaBalance + detail2.GoogleBalance + detail2.PsnBalance + detail2.OtherBalance
+                + detail2.FreeFireBalance + detail2.RazerBalance;
             TBtotlal.Text = total.ToString("0.000");
         }
     }
