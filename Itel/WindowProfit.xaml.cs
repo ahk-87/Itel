@@ -67,7 +67,7 @@ namespace Itel
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             string path = @"D:\Dropbox\Grandstream new\Progs\JaroorDolarat.txt";
-            string regDollars = @"dollars	\: (\d{2,4}(?:\.\d{1,2})?)\(MTC\) \+ (\d{2,4}(?:\.\d{1,2})?)\(Alfa\)";
+            string regDollars = @"dollars	\: (\d{2,5}(?:\.\d{1,2})?)\(MTC\) \+ (\d{2,4}(?:\.\d{1,2})?)\(Alfa\)";
             string regTotal = @"total   \= (\d{2,5}(?:\.\d{1,2})?)\$(?: \+ \((\d{2,4})\$)?";
             string regDate = @"\d{2}\-\d{2}-\d{4}";
             string data = File.ReadAllText(path);

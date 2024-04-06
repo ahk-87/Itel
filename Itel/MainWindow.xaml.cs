@@ -45,6 +45,7 @@ namespace Itel
         double oneMonthPrice = 25.4;
         double twoMonthPrice = 50.62;
         double threeMonthPrice = 75.85;
+        double touchYearPrice = 257.49;
 
 
         //bool touchSmallEnabled = false;
@@ -104,6 +105,13 @@ namespace Itel
                     return;
 
                 }
+                else if (mainUser.SessionCounter == "restart")
+                {
+                    statusTB.Foreground = Brushes.Red;
+                    statusTB.Text = "Please restart the program";
+                    return;
+
+                }
 
                 await GetBalance();
                 BTNdetail.IsEnabled = true;
@@ -139,6 +147,7 @@ namespace Itel
                 sosProgTB.IsEnabled = true;
                 touchSmallProgTB.IsEnabled = true;
                 touch1MonthProgTB.IsEnabled = true;
+                touchMediumProgTB.IsEnabled = true;
                 check.IsEnabled = true;
                 //touch1MonthProgTB.Focus();
             }
@@ -151,6 +160,11 @@ namespace Itel
             if (balance > 75)
             {
                 touch3MonthProgTB.IsEnabled = true;
+            }
+
+            if (balance > 260)
+            {
+                touchYearProgTB.IsEnabled = true;
             }
 
             balanceTB.Text = string.Format("Balance = {0:0.000} $", balance);
@@ -172,10 +186,12 @@ namespace Itel
                         int.Parse(touch2MonthProgTB.Text) * (twoMonthPrice + ExtraPrice) +
                         int.Parse(touch3MonthProgTB.Text) * (threeMonthPrice + ExtraPrice) +
                         int.Parse(touchSmallProgTB.Text) * (touchSmallPrice + ExtraPrice) +
+                        int.Parse(touchMediumProgTB.Text) * (touchMediumPrice + ExtraPrice) +
                         int.Parse(startProgTB.Text) * (startPrice + ExtraPrice) +
                         int.Parse(sosProgTB.Text) * (sosPrice + ExtraPrice) +
                         int.Parse(alfa1MonthProgTB.Text) * (oneMonthPrice + ExtraPrice) +
-                        int.Parse(alfaSmallProgTB.Text) * (startPrice + ExtraPrice);
+                        int.Parse(alfaSmallProgTB.Text) * (startPrice + ExtraPrice) +
+                        int.Parse(touchYearProgTB.Text) * (touchYearPrice + ExtraPrice);
 
                     if (balance > purchasingBalance)
                     {
@@ -189,6 +205,8 @@ namespace Itel
                         await purchase(touch3MonthProgTB);
                         statusTB.Text = "Purchasing touch 12.5";
                         await purchase(touchSmallProgTB);
+                        statusTB.Text = "Purchasing touch 19.11";
+                        await purchase(touchMediumProgTB);
                         statusTB.Text = "Purchasing alfa 25";
                         await purchase(alfa1MonthProgTB);
                         //statusTB.Text = "Purchasing alfa 50";
@@ -201,16 +219,20 @@ namespace Itel
                         await purchase(startProgTB);
                         statusTB.Text = "Purchasing SOS";
                         await purchase(sosProgTB);
+                        statusTB.Text = "Purchasing touch YEAR";
+                        await purchase(touchYearProgTB);
 
 
                         purchasingBalance = int.Parse(touch1MonthProgTB.Text) * (oneMonthPrice + ExtraPrice) +
                         int.Parse(touch2MonthProgTB.Text) * (twoMonthPrice + ExtraPrice) +
                         int.Parse(touch3MonthProgTB.Text) * (threeMonthPrice + ExtraPrice) +
                         int.Parse(touchSmallProgTB.Text) * (touchSmallPrice + ExtraPrice) +
+                        int.Parse(touchMediumProgTB.Text) * (touchMediumPrice + ExtraPrice) +
                         int.Parse(startProgTB.Text) * (startPrice + ExtraPrice) +
                         int.Parse(sosProgTB.Text) * (sosPrice + ExtraPrice) +
                         int.Parse(alfa1MonthProgTB.Text) * (oneMonthPrice + ExtraPrice) +
-                        int.Parse(alfaSmallProgTB.Text) * (startPrice + ExtraPrice);
+                        int.Parse(alfaSmallProgTB.Text) * (startPrice + ExtraPrice) +
+                        int.Parse(touchYearProgTB.Text) * (touchYearPrice + ExtraPrice);
 
                         await GetBalance(purchasingBalance);
                     }
@@ -236,6 +258,7 @@ namespace Itel
             {
                 statusTB.Foreground = Brushes.Red;
                 statusTB.Text = "No Internet";
+                windowCanBeClosed = true;
             }
             catch (FormatException ex)
             {
@@ -243,12 +266,14 @@ namespace Itel
                 statusTB.Text = "Error in card count";
                 if (!isForMah)
                     updateVouchersTextFile();
+                windowCanBeClosed = true;
             }
             catch (Exception ex)
             {
 
                 statusTB.Foreground = Brushes.Red;
                 statusTB.Text = ex.Message;
+                windowCanBeClosed = true;
             }
         }
 
@@ -259,6 +284,7 @@ namespace Itel
                 string domId = tb.Tag as string;
                 string countString = tb.Text;
                 string cardType;
+                string price = "0";
                 bool bigCard = false;
 
 
@@ -269,36 +295,50 @@ namespace Itel
                 {
                     case "80011":
                         cardType = "to(12.5)uch";
+                        price = "1936200";
                         break;
 
                     case "80017":
                         cardType = "to(19.11)uch";
+                        price = "2895200";
                         break;
 
                     case "80022":
                         cardType = "touch25";
+                        price = "3848100";
                         break;
 
                     case "80045":
                         cardType = "touch50";
+                        price = "7669000";
                         bigCard = true;
                         break;
 
                     case "80068":
                         cardType = "touch75";
+                        price = "11491300";
+                        bigCard = true;
+                        break;
+
+                    case "80231":
+                        cardType = "touchYear";
+                        price = "39009800";
                         bigCard = true;
                         break;
 
                     case "80010":
                         cardType = "start";
+                        price = "1554400";
                         break;
 
                     case "80040":
                         cardType = "SOS";
+                        price = "637900";
                         break;
 
                     case "81025":
                         cardType = "alfa25";
+                        price = "3848100";
                         break;
 
                     //case "81050":
@@ -313,6 +353,7 @@ namespace Itel
 
                     case "81010":
                         cardType = "al(9.09)fa";
+                        price = "1554400";
                         break;
 
                     default:
@@ -320,7 +361,7 @@ namespace Itel
                         break;
                 }
 
-                if (count > 16 || (bigCard && count > 1))
+                if (count > 16 || (bigCard && count > 2))
                 {
                     setNoCards(tb, "high cards count not allowed");
                     return;
@@ -336,7 +377,7 @@ namespace Itel
 
                 await Task.Delay(1000);
 
-                List<Voucher> vouchers = await mainUser.PurchaseVouchers(domId, countString);
+                List<Voucher> vouchers = await mainUser.PurchaseVouchers(domId, countString, price);
 
 
                 int lineNumber = 0;
@@ -377,7 +418,14 @@ namespace Itel
                 foreach (Voucher v in vouchers)
                 {
                     string formatted = string.Format("{0}. {1}", tempCount, ReformatVoucher(v.secret, (cardType.StartsWith("al"))));
-                    lines.Insert(lineNumber, formatted + (domId == "81010" ? " , (alfa z8ir)" : ""));
+                    string placeholder = "";
+                    if (domId == "80022" || domId == "80010" || domId == "80011")
+                        placeholder = " ,    " + v.serial;
+                    else if (domId == "81010")
+                        placeholder = " , (alfa z8ir)";
+                    else if (domId == "80017")
+                        placeholder = " , (كرت وسط)";
+                    lines.Insert(lineNumber, formatted + placeholder + "     [" + v.secret + "]");
                     tempCount--;
                 }
 
@@ -407,9 +455,11 @@ namespace Itel
         {
             string path = @"D:\Dropbox\Grandstream new\Progs\JaroorDolarat.txt";
             int touchSmallCount = int.Parse(touchSmallCardTB.Text) + int.Parse(touchSmallProgTB.Text);
+            int touchMediumCount = int.Parse(touchMediumCardTB.Text) + int.Parse(touchMediumProgTB.Text);
             int touch1MonthCount = int.Parse(touchBigCardTB.Text) + int.Parse(touch1MonthProgTB.Text);
-            int touch2MonthCount = int.Parse(touch2MonthProgTB.Text);
-            int touch3MonthCount = int.Parse(touch3MonthProgTB.Text);
+            int touch2MonthCount = int.Parse(touch2MonthCardTB.Text) + int.Parse(touch2MonthProgTB.Text);
+            int touch3MonthCount = int.Parse(touch3MonthCardTB.Text) + int.Parse(touch3MonthProgTB.Text);
+            int touchYearCount = int.Parse(touchYearCardTB.Text) + int.Parse(touchYearProgTB.Text);
             int alfaSmallCount = int.Parse(alfaSmallCardTB.Text) + int.Parse(alfaSmallProgTB.Text);
             int alfa1MonthCount = int.Parse(alfaBigCardTB.Text) + int.Parse(alfa1MonthProgTB.Text);
             //int alfa2MonthCount = int.Parse(alfa2MonthProgTB.Text);
@@ -417,8 +467,9 @@ namespace Itel
             int sosCount = int.Parse(sosCardTB.Text) + int.Parse(sosProgTB.Text);
             int startCount = int.Parse(startCardTB.Text) + int.Parse(startProgTB.Text);
 
-            double totalTouchSum = touchSmallCount * (touchSmallPrice + ExtraPrice) + touch1MonthCount * (oneMonthPrice + ExtraPrice) + touch2MonthCount * (twoMonthPrice + ExtraPrice)
-                + touch3MonthCount * (threeMonthPrice + ExtraPrice);
+            double totalTouchSum = touchSmallCount * (touchSmallPrice + ExtraPrice) + touchMediumCount * (touchMediumPrice + ExtraPrice)
+                + touch1MonthCount * (oneMonthPrice + ExtraPrice) + touchYearCount * (touchYearPrice + ExtraPrice)
+                + touch2MonthCount * (twoMonthPrice + ExtraPrice) + touch3MonthCount * (threeMonthPrice + ExtraPrice);
             double totalAlfaSum = alfaSmallCount * (startPrice + ExtraPrice) + alfa1MonthCount * (oneMonthPrice + ExtraPrice);
             double totalStartSum = sosCount * (sosPrice + ExtraPrice) + startCount * (startPrice + ExtraPrice);
             double totalSum = totalTouchSum + totalAlfaSum + totalStartSum;
@@ -445,34 +496,38 @@ namespace Itel
             }
             // string dayFormat = @"cards\t: (.*?) \((\d{1,2})\+(\d{1,2})\+(\d{1,2})\+(\d{1,2})\.MTC  (\d{1,2})\+(\d{1,2})\+(\d{1,2})\+(\d{1,2})\.Alfa\) \+ (.*?)\((\d{1,2})\.St  (\d{1,2})\.SOS\)";
 
-            string cardsFormat = "cards	: {0:0.00} ({1}+{2}+{3}+{4}.MTC  {5}+{6}.Alfa) + {7:0.00}({8}.St  {9}.SOS)";
-            Match match = Regex.Match(lines[cardsLine], @"cards\t: (.*?) \((\d{1,2})\+(\d{1,2})\+(\d{1,2})\+(\d{1,2})\.MTC  (\d{1,2})\+(\d{1,2})\.Alfa\) \+ (.*?)\((\d{1,2})\.St  (\d{1,2})\.SOS\)");
+            string cardsFormat = "cards	: {0:0.00} ({1}s+{2}m+{3}b,{4}+{5}+{6}y.MTC  {7}+{8}.Alfa) + {9:0.00}({10}.St  {11}.SOS)";
+            Match match = Regex.Match(lines[cardsLine], @"cards\t: (.*?) \((\d{1,2})s\+(\d{1,2})m\+(\d{1,2})b\,(\d{1,2})\+(\d{1,2})\+(\d{1,2})y\.MTC  (\d{1,2})\+(\d{1,2})\.Alfa\) \+ (.*?)\((\d{1,2})\.St  (\d{1,2})\.SOS\)");
             double text_total1 = double.Parse(match.Groups[1].Value);
             text_total1 += totalTouchSum + totalAlfaSum;
-            double text_total2 = double.Parse(match.Groups[8].Value);
+            double text_total2 = double.Parse(match.Groups[10].Value);
             text_total2 += totalStartSum;
             int text_touchSmallCount = int.Parse(match.Groups[2].Value);
             text_touchSmallCount += touchSmallCount;
-            int text_touch1MonthCount = int.Parse(match.Groups[3].Value);
+            int text_touchMediumCount = int.Parse(match.Groups[3].Value);
+            text_touchMediumCount += touchMediumCount;
+            int text_touch1MonthCount = int.Parse(match.Groups[4].Value);
             text_touch1MonthCount += touch1MonthCount;
-            int text_touch2MonthCount = int.Parse(match.Groups[4].Value);
+            int text_touch2MonthCount = int.Parse(match.Groups[5].Value);
             text_touch2MonthCount += touch2MonthCount;
-            int text_touch3MonthCount = int.Parse(match.Groups[5].Value);
+            int text_touch3MonthCount = int.Parse(match.Groups[6].Value);
             text_touch3MonthCount += touch3MonthCount;
-            int text_alfaSmallCount = int.Parse(match.Groups[6].Value);
+            int text_touchYearCount = int.Parse(match.Groups[7].Value);
+            text_touchYearCount += touchYearCount;
+            int text_alfaSmallCount = int.Parse(match.Groups[8].Value);
             text_alfaSmallCount += alfaSmallCount;
-            int text_alfa1MonthCount = int.Parse(match.Groups[7].Value);
+            int text_alfa1MonthCount = int.Parse(match.Groups[9].Value);
             text_alfa1MonthCount += alfa1MonthCount;
             //int text_alfa2MonthCount = int.Parse(match.Groups[8].Value);
             //text_alfa2MonthCount += alfa2MonthCount;
             //int text_alfa3MonthCount = int.Parse(match.Groups[9].Value);
             //text_alfa3MonthCount += alfa3MonthCount;
-            int text_startCount = int.Parse(match.Groups[9].Value);
+            int text_startCount = int.Parse(match.Groups[11].Value);
             text_startCount += startCount;
-            int text_sosCount = int.Parse(match.Groups[10].Value);
+            int text_sosCount = int.Parse(match.Groups[12].Value);
             text_sosCount += sosCount;
-            lines[cardsLine] = string.Format(cardsFormat, text_total1, text_touchSmallCount, text_touch1MonthCount,
-                text_touch2MonthCount, text_touch3MonthCount, text_alfaSmallCount, text_alfa1MonthCount,
+            lines[cardsLine] = string.Format(cardsFormat, text_total1, text_touchSmallCount, text_touchMediumCount, text_touch1MonthCount,
+                text_touch2MonthCount, text_touch3MonthCount, text_touchYearCount, text_alfaSmallCount, text_alfa1MonthCount,
                 text_total2, text_startCount, text_sosCount);
 
             //string cashFormat = "cash	: 968.66+50 (5asara 0$) + 86.33";
@@ -484,25 +539,27 @@ namespace Itel
 
             if (!lines[purchasesLine].StartsWith("("))
             {
-                lines.Insert(purchasesLine, string.Format("({0}+{1}+{2}+{3} {4}+{5} {6}+{7} = {8})",
-                     touchSmallCount, touch1MonthCount, touch2MonthCount, touch3MonthCount,
+                lines.Insert(purchasesLine, string.Format("({0}s+{1}m+{2}b,{3}+{4}+{5}y {6}+{7} {8}+{9} = {10})",
+                     touchSmallCount, touchMediumCount, touch1MonthCount, touch2MonthCount, touch3MonthCount, touchYearCount,
                      alfaSmallCount, alfa1MonthCount, startCount, sosCount, totalSum));
             }
             else
             {
-                match = Regex.Match(lines[purchasesLine], @"\((\d{1,2})\+(\d{1,2})\+(\d{1,2})\+(\d{1,2}) (\d{1,2})\+(\d{1,2}) (\d{1,2})\+(\d{1,2}) = (\d{1,4}(?:\.\d{1,2})?)\)");
+                match = Regex.Match(lines[purchasesLine], @"\((\d{1,2})s\+(\d{1,2})m\+(\d{1,2})b\,(\d{1,2})\+(\d{1,2})\+(\d{1,2})y (\d{1,2})\+(\d{1,2}) (\d{1,2})\+(\d{1,2}) = (\d{1,4}(?:\.\d{1,2})?)\)");
                 int t1 = int.Parse(match.Groups[1].Value) + touchSmallCount;
-                int t2 = int.Parse(match.Groups[2].Value) + touch1MonthCount;
-                int t3 = int.Parse(match.Groups[3].Value) + touch2MonthCount;
-                int t4 = int.Parse(match.Groups[4].Value) + touch3MonthCount;
-                int a1 = int.Parse(match.Groups[5].Value) + alfaSmallCount;
-                int a2 = int.Parse(match.Groups[6].Value) + alfa1MonthCount;
-                int s1 = int.Parse(match.Groups[7].Value) + startCount;
-                int s2 = int.Parse(match.Groups[8].Value) + sosCount;
-                double total = double.Parse(match.Groups[9].Value) + totalSum;
+                int t2 = int.Parse(match.Groups[2].Value) + touchMediumCount;
+                int t3 = int.Parse(match.Groups[3].Value) + touch1MonthCount;
+                int t4 = int.Parse(match.Groups[4].Value) + touch2MonthCount;
+                int t5 = int.Parse(match.Groups[5].Value) + touch3MonthCount;
+                int t6 = int.Parse(match.Groups[6].Value) + touchYearCount;
+                int a1 = int.Parse(match.Groups[7].Value) + alfaSmallCount;
+                int a2 = int.Parse(match.Groups[8].Value) + alfa1MonthCount;
+                int s1 = int.Parse(match.Groups[9].Value) + startCount;
+                int s2 = int.Parse(match.Groups[10].Value) + sosCount;
+                double total = double.Parse(match.Groups[11].Value) + totalSum;
 
-                lines[purchasesLine] = string.Format("({0}+{1}+{2}+{3} {4}+{5} {6}+{7} = {8})",
-                    t1, t2, t3, t4, a1, a2, s1, s2, total);
+                lines[purchasesLine] = string.Format("({0}s+{1}m+{2}b,{3}+{4}+{5}y {6}+{7} {8}+{9} = {10})",
+                    t1, t2, t3, t4, t5, t6, a1, a2, s1, s2, total);
             }
 
             lines.Reverse();
@@ -536,17 +593,28 @@ namespace Itel
         {
 
             TextBox tb = e.Source as TextBox;
-            tb.SelectAll();
-            if ((e.Key >= Key.D0 && e.Key <= Key.D9) || (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || e.Key == Key.Tab)
+            //tb.SelectAll();
+            if ((e.Key >= Key.D0 && e.Key <= Key.D9) || (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || e.Key == Key.Tab
+                || e.Key == Key.OemMinus || e.Key == Key.Back)
             {
+                if (tb.Text.Length == 1)
+                {
+                    if (e.Key == Key.Back)
+                        tb.Text = "0";
+                    else if (tb.Text == "0")
+                        tb.SelectAll();
+                }
                 e.Handled = false;
             }
             else
-            {
-                tb.Text = "0";
-                tb.SelectAll();
-                e.Handled = true;
-            }
+            { e.Handled = true; }
+            //else if (string.IsNullOrEmpty( tb.Text)
+            //else
+            //{
+            //    tb.Text = "0";
+            //    tb.SelectAll();
+            //    e.Handled = true;
+            //}
         }
 
         private void textboxProgram_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -649,20 +717,21 @@ namespace Itel
             List<string> touchSmall = new List<string>();
             List<string> touchStart = new List<string>();
 
+            buttonOldCards.IsEnabled = false;
             for (int i = 0; i < 4; i++)
             {
                 foreach (MyLogInvoiceResponse invoice in mainUser.Transactions[i].myLogInvoiceResponses)
                 {
-                    foreach (LogDetail log in invoice.logDetails.Reverse<LogDetail>())
+                    foreach (LogDetail log in invoice.logDetails)
                     {
                         List<string> tempList;
                         if (log.service == "TOUCH")
                         {
-                            if (log.amount == "12.78")
+                            if (log.denomination == "TOUCH ($12.78)")
                                 tempList = touchSmall;
-                            else if (log.amount == "25.4")
+                            else if (log.denomination == "TOUCH ($25.4)")
                                 tempList = touchBig;
-                            else if (log.amount == "10.26")
+                            else if (log.denomination == "TOUCH START ($10.26)")
                                 tempList = touchStart;
                             else
                                 continue;
@@ -690,11 +759,13 @@ namespace Itel
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             File.WriteAllLines(path + "\\old cards.txt", touchBig);
+            buttonOldCards.IsEnabled = true;
         }
 
         public class ItelUser
         {
-            const string balanceUrl = "https://whish.money/itel-service/sale/accountfinancialdetails";
+            //const string balanceUrl = "https://whish.money/itel-service/account/homepagehttps://whish.money/itel-service/sale/accountfinancialdetails";
+            const string balanceUrl = "https://whish.money/itel-service/account/homepage";
             const string lostTransactionsUrl = "https://whish.money/itel-service/transaction/lost/new";
             const string purchasevouchersUrl = "https://whish.money/itel-service/sale/voucher";
             const string topupVoucherUrl = "https://whish.money/itel-service/sale/voucherTopup";
@@ -719,9 +790,12 @@ namespace Itel
 
             public List<Transaction> Transactions;
 
+            string servicesVersion = "11384";
+            string serverVersion = "22";
+
             public ItelUser(string path, bool universal)
             {
-                SessionCounter = "1";
+                SessionCounter = "0";
                 TokenPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + path;
                 Transactions = new List<Transaction>();
                 UniversalAccount = universal;
@@ -736,6 +810,7 @@ namespace Itel
                     DeviceId = data[0];
                     Token = data[1];
                     SessionId = data[2];
+                    //servicesVersion = data[3];
 
                     TransactionsPath = UniversalAccount ? "universal" : SessionId;
 
@@ -763,10 +838,14 @@ namespace Itel
                 {
                     File.WriteAllText(sessionCounterPath, SessionCounter);
                 }
+
+
                 await Task.Delay(200);
                 WebClient client = createClient();
 
                 string result = await client.DownloadStringTaskAsync(lostTransactionsUrl);
+                //servicesVersion = client.ResponseHeaders["servicesversion"];
+
                 if (result.Contains("update"))
                 {
                     SessionCounter = "update";
@@ -775,9 +854,16 @@ namespace Itel
                 else
                 {
                     SessionCounter = client.ResponseHeaders["sessionCounter"];
+                    servicesVersion = client.ResponseHeaders["servicesversion"];
                     if (SessionCounter == null)
-                        SessionCounter = "12000";
-                    File.WriteAllText(sessionCounterPath, SessionCounter);
+                    {
+                        File.WriteAllText(sessionCounterPath, "0");
+                        SessionCounter = "restart";
+                    }
+                    else
+                        File.WriteAllText(sessionCounterPath, SessionCounter);
+
+
                     //if (!File.Exists("details.txt"))
                     //   File.WriteAllText("details.txt", await client.DownloadStringTaskAsync(costsUrl));
                 }
@@ -801,16 +887,20 @@ namespace Itel
 
             async public Task<double> GetBalance()
             {
+                string post = string.Format("{{\"serverVersion\":{0},\"servicesVersion\":{1}}}", serverVersion, servicesVersion);
                 WebClient client = createClient();
-                string result = await client.DownloadStringTaskAsync(balanceUrl);
+                client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
+                string result = await client.UploadStringTaskAsync(balanceUrl, post);
 
-                RootObject<BalanceData> root = Json.Desirialize<BalanceData>(result);
-                return root.data.balance;
+                RootObject<BalanceDetails> root = Json.Desirialize<BalanceDetails>(result);
+                string stringBalance = Regex.Match(root.data.balance, "My Money: (.*) LBP").Groups[1].Value;
+                int intBalance = int.Parse(stringBalance, NumberStyles.AllowThousands);
+                return intBalance / 1515.0;
             }
 
-            async public Task<List<Voucher>> PurchaseVouchers(string dominationID, string count)
+            async public Task<List<Voucher>> PurchaseVouchers(string dominationID, string count, string price)
             {
-                string post = string.Format("{{\"denominationId\":{0},\"numberOfItems\":{1}}}", dominationID, count);
+                string post = string.Format("{{\"denominationId\":{0},\"numberOfItems\":{1},\"price\":{2}}}", dominationID, count, price);
                 WebClient client = createClient();
                 client.Headers.Add("Content-Type", "application/json;charset=UTF-8");
                 string result = await client.UploadStringTaskAsync(purchasevouchersUrl, post);
@@ -818,7 +908,8 @@ namespace Itel
                 //string result = File.ReadAllText(@"C:\Users\SK\Documents\Visual Studio 2015\Projects\TestConsole\TestConsole\bin\Debug\Raw.txt");
 
                 SessionCounter = client.ResponseHeaders["sessionCounter"];
-                File.WriteAllText(sessionCounterPath, SessionCounter);
+                if (!string.IsNullOrWhiteSpace(SessionCounter))
+                    File.WriteAllText(sessionCounterPath, SessionCounter);
                 RootObject<SalesData> root = Json.Desirialize<SalesData>(result);
                 return root.data.Vouchers;
             }
@@ -914,7 +1005,7 @@ namespace Itel
                 client.Headers.Add("deviceId", DeviceId);
                 client.Headers.Add("sessionCounter", SessionCounter);
                 client.Headers.Add("locale", "en");
-                //client.Headers.Add("Host", "whish.money");
+                client.Headers.Add("operatingSystem", "1");
 
                 return client;
             }

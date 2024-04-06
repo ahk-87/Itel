@@ -190,7 +190,11 @@ namespace Itel
                     {
                         foreach (LogDetail log in invoice.logDetails)
                         {
-                            double amountInDollar = double.Parse(log.amount);
+                            double amountInDollar = 0;
+                            if (log.amount.Contains("LBP"))
+                                amountInDollar = double.Parse(log.amount.Split(new char[] { ' ' })[0]);
+                            else
+                                amountInDollar = double.Parse(log.amount);
                             if (amountInDollar > 1000)
                                 amountInDollar = Math.Round(amountInDollar / 15.15) / 100;
                             if (log.service == "TOUCH")
@@ -205,10 +209,10 @@ namespace Itel
                                 detail.RazerBalance += amountInDollar;
                             else if (log.service == "FREE FIRE")
                                 detail.FreeFireBalance += amountInDollar;
-                            else if (log.service == "WHISH COLLECT PAYMENT")
-                            {
-                                //detail.OtherBalance += double.Parse(log.amount.Remove(log.amount.Length-4));
-                            }
+                            //else if (log.service == "P2P WHISH TRANSFER")
+                            //{
+                            //    detail.OtherBalance += double.Parse(log.amount.Remove(log.amount.Length - 4),System.Globalization.NumberStyles.AllowDecimalPoint);
+                            //}
                             //else if (log.service == "TOUCH VALIDITY TRANSFER")
                             //    detail.OtherBalance += log.amount;
                             else

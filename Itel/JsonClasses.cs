@@ -19,20 +19,30 @@ namespace Itel
     }
 
     #region Balance Classes
-    public class BalanceData
-    {
-        public BalanceDetails balanceDetails { get; set; }
-        public object responseDenominations { get; set; }
-        public double balance { get; set; }
-        public double voidBalance { get; set; }
-    }
-
     public class BalanceDetails
     {
-        public String balance { get; set; }
-        public String voidBalance { get; set; }
+        public object menu { get; set; }
+        public object server { get; set; }
+        public object announcement { get; set; }
+        public string balance { get; set; }
     }
     #endregion
+
+    //#region Balance Classes
+    //public class BalanceData
+    //{
+    //    public BalanceDetails balanceDetails { get; set; }
+    //    public object responseDenominations { get; set; }
+    //    public double balance { get; set; }
+    //    public double voidBalance { get; set; }
+    //}
+
+    //public class BalanceDetails
+    //{
+    //    public String balance { get; set; }
+    //    public String voidBalance { get; set; }
+    //}
+    //#endregion
 
     #region Services Classes
 
